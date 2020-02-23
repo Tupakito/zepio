@@ -40,7 +40,7 @@ export const DARK_COLORS = {
   background: shark,
   divider: black,
   inactiveItem: scorpion,
-  activeItem: saffron,
+  activeItem: white,
 
   // Header
   headerTitle: white,
@@ -67,11 +67,11 @@ export const DARK_COLORS = {
   sendCardBorder: transparent,
 
   // Buttons
-  buttonPrimaryBg: saffron,
-  buttonPrimaryDisabledBg: saffron,
+  buttonPrimaryBg: white,
+  buttonPrimaryDisabledBg: white,
   buttonPrimaryText: black,
   buttonSecondaryBg: gray,
-  buttonSecondaryDisabledBg: saffron,
+  buttonSecondaryDisabledBg: white,
   buttonSecondaryText: black,
   buttonSecondaryBorder: gray,
   buttonSecondaryHoveredBg: silver,
@@ -103,12 +103,12 @@ export const DARK_COLORS = {
   // Sidebar
   sidebarBg: black,
   sidebarBorderRight: black,
-  sidebarLogoGradientBegin: saffron,
-  sidebarLogoGradientEnd: brightSun,
+  sidebarLogoGradientBegin: black,
+  sidebarLogoGradientEnd: black,
   sidebarHoveredItemLabel: manatee,
   sidebarActiveItemBorder: error,
   sidebarItem: scorpion,
-  sidebarItemActive: saffron,
+  sidebarItemActive: white,
   sidebarItemHovered: white,
   sidebarItemHoveredBg: shark,
 
@@ -148,5 +148,5 @@ export const DARK_COLORS = {
   // Loading
   loadingScreenBg: black,
   loadingScreenText: white,
-  loadingScreenProgress: saffron,
+  loadingScreenProgress: white,
 };

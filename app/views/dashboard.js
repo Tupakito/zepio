@@ -17,7 +17,7 @@ import { FETCH_STATE } from '../constants/fetch-states';
 
 import type { MapDispatchToProps, MapStateToProps } from '../containers/dashboard';
 
-import zepioLogo from '../assets/images/zcash-icon.png';
+import zepioLogo from '../assets/images/zero-icon.png';
 
 const ModalContent = styled(ColumnComponent)`
   min-height: 400px;
@@ -138,9 +138,9 @@ export class DashboardView extends PureComponent<Props> {
                 <ContentWrapper>
                   <LogoComponent src={zepioLogo} alt='Zepio' />
                   <TitleComponent value='Hello from Zepio' isBold />
-                  <WelcomeText value='Zepio is a cross-platform full-node Zcash wallet that allows users to easily send and receive ZEC. With first-class support for Sapling shielded addresses, users are able to create truly private transactions using a modern and intuitive interface.' />
+                  <WelcomeText value='Zepio is a cross-platform full-node Zero wallet that allows users to easily send and receive ZEC. With first-class support for Sapling shielded addresses, users are able to create truly private transactions using a modern and intuitive interface.' />
                   <WelcomeText value='Zepio aims to improve the user experience for those seeking true financial privacy online.' />
-                  <AdditionalText value='Zepio will need to sync the Zcash blockchain data before using all features.' />
+                  <AdditionalText value='Zepio will need to sync the Zero blockchain data before using all features.' />
                 </ContentWrapper>
               </ModalContent>
             )}

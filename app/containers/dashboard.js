@@ -64,9 +64,18 @@ const mapDispatchToProps: (dispatch: Dispatch) => MapDispatchToProps = (dispatch
     const [zAddressesErr, zAddresses = []] = await eres(rpc.z_listaddresses());
     const [tAddressesErr, tAddresses = []] = await eres(rpc.getaddressesbyaccount(''));
     const [transactionsErr, transactions] = await eres(rpc.listtransactions());
-    const [unconfirmedBalanceErr, unconfirmedBalance] = await eres(rpc.getunconfirmedbalance());
+    // const [unconfirmedBalanceErr, unconfirmedBalance] = await eres(rpc.getunconfirmedbalance());
 
-    if (walletErr || zAddressesErr || tAddressesErr || transactionsErr || unconfirmedBalanceErr) {
+    const [getDataErr, data] = await eres(rpc.getalldata(0));
+    const totalbalance = data.totalbalance;
+    // const totalbalance = data['totalbalance'];
+    const unconfirmedBalance = data.totalunconfirmed;
+    // const unconfirmedBalance = data['totalunconfirmed'];
+    // const transactions = data.listtransactions;
+    // log( transactions );
+
+    // if (walletErr || zAddressesErr || tAddressesErr || transactionsErr || unconfirmedBalanceErr) {
+    if (getDataErr || walletErr || zAddressesErr || tAddressesErr || transactionsErr ) {
       return dispatch(
         loadWalletSummaryError({
           error: 'Something went wrong!',
@@ -95,7 +104,7 @@ const mapDispatchToProps: (dispatch: Dispatch) => MapDispatchToProps = (dispatch
     ])([...transactions, ...listShieldedTransactions()]);
 
     if (!zAddresses.length) {
-      const [, newZAddress] = await eres(rpc.z_getnewaddress(SAPLING));
+      const [, newZAddress] = await eres(rpc.z_getnewaddress());
 
       if (newZAddress) zAddresses.push(newZAddress);
     }
@@ -109,7 +118,7 @@ const mapDispatchToProps: (dispatch: Dispatch) => MapDispatchToProps = (dispatch
     dispatch(
       loadWalletSummarySuccess({
         transparent: walletSummary.transparent,
-        total: walletSummary.total,
+        total: totalbalance,
         shielded: walletSummary.private,
         unconfirmed: unconfirmedBalance,
         addresses: [...zAddresses, ...tAddresses],

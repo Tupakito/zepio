@@ -27,6 +27,7 @@ const error = '#FF6C6C';
 const success = '#66BE54';
 const cornflowerBlue = '#5684EB';
 const saffron = '#F4B728';
+const yellow = '#FFD700';
 const brightSun = '#FFE240';
 const offBrand = 'rgba(238,201,76,0.65)';
 
@@ -101,8 +102,8 @@ export const LIGHT_COLORS = {
   // Sidebar
   sidebarBg: white,
   sidebarBorderRight: alto,
-  sidebarLogoGradientBegin: saffron,
-  sidebarLogoGradientEnd: brightSun,
+  sidebarLogoGradientBegin: black,
+  sidebarLogoGradientEnd: black,
   sidebarHoveredItemLabel: manatee,
   sidebarItem: silverChalice,
   sidebarItemActive: text,
@@ -147,5 +148,5 @@ export const LIGHT_COLORS = {
   // Loading
   loadingScreenBg: black,
   loadingScreenText: white,
-  loadingScreenProgress: saffron,
+  loadingScreenProgress: yellow,
 };

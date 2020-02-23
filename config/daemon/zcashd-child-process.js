@@ -18,7 +18,7 @@ import getBinariesPath from './get-binaries-path';
 import getOsFolder from './get-os-folder';
 import getDaemonName from './get-daemon-name';
 import fetchParams from './run-fetch-params';
-import { locateZcashConf } from './locate-zcash-conf';
+import { locateZeroConf } from './locate-zcash-conf';
 import { log } from './logger';
 import store from '../electron-store';
 import { parseZcashConf, parseCmdArgs, generateArgsFromConf } from './parse-zcash-conf';
@@ -26,13 +26,13 @@ import { isTestnet } from '../is-testnet';
 import { getDaemonProcessId } from './get-daemon-process-id';
 import {
   EMBEDDED_DAEMON,
-  ZCASH_NETWORK,
+  ZERO_NETWORK,
   TESTNET,
   MAINNET,
 } from '../../app/constants/zcash-network';
 
 const getDaemonOptions = ({
-  username, password, useDefaultZcashConf, optionsFromZcashConf,
+  username, password, useDefaultZcashConf, optionsFromZeroConf,
 }) => {
   /*
     -showmetrics
@@ -52,18 +52,18 @@ const getDaemonOptions = ({
     `-rpcuser=${username}`,
     `-rpcpassword=${password}`,
     ...(isTestnet() ? ['-testnet', '-addnode=testnet.z.cash'] : ['-addnode=mainnet.z.cash']),
-    // Overwriting the settings with values taken from "zcash.conf"
-    ...optionsFromZcashConf,
+    // Overwriting the settings with values taken from "zero.conf"
+    ...optionsFromZeroConf,
   ];
 
-  if (useDefaultZcashConf) defaultOptions.push(`-conf=${locateZcashConf()}`);
+  if (useDefaultZcashConf) defaultOptions.push(`-conf=${locateZeroConf()}`);
 
-  return Array.from(new Set([...defaultOptions, ...optionsFromZcashConf]));
+  return Array.from(new Set([...defaultOptions, ...optionsFromZeroConf]));
 };
 
 let resolved = false;
 
-const ZCASHD_PROCESS_NAME = getDaemonName();
+const ZEROD_PROCESS_NAME = getDaemonName();
 const DAEMON_PROCESS_PID = 'DAEMON_PROCESS_PID';
 const DAEMON_START_TIME = 'DAEMON_START_TIME';
 
@@ -98,7 +98,7 @@ const runDaemon: () => Promise<?ChildProcess> = () => new Promise(async (resolve
   store.delete(DAEMON_PROCESS_PID);
   store.delete(DAEMON_START_TIME);
 
-  const processName = path.join(getBinariesPath(), getOsFolder(), ZCASHD_PROCESS_NAME);
+  const processName = path.join(getBinariesPath(), getOsFolder(), ZEROD_PROCESS_NAME);
   const isRelaunch = Boolean(process.argv.find(arg => arg === '--relaunch'));
 
   if (!mainWindow.isDestroyed()) mainWindow.webContents.send('zcashd-params-download', 'Fetching params...');
@@ -128,35 +128,35 @@ const runDaemon: () => Promise<?ChildProcess> = () => new Promise(async (resolve
   // In case of --relaunch on argv, we need wait to close the old zcash daemon
   // a workaround is use a interval to check if there is a old process running
   if (isRelaunch) {
-    await waitForDaemonClose(ZCASHD_PROCESS_NAME);
+    await waitForDaemonClose(ZEROD_PROCESS_NAME);
   }
 
   // This will parse and save rpcuser and rpcpassword in the store
-  let [, optionsFromZcashConf] = await eres(parseZcashConf());
+  let [, optionsFromZeroConf] = await eres(parseZcashConf());
 
-  // if the user has a custom datadir and doesn't have a zcash.conf in that folder,
-  // we need to use the default zcash.conf
+  // if the user has a custom datadir and doesn't have a zero.conf in that folder,
+  // we need to use the default zero.conf
   let useDefaultZcashConf = false;
 
-  if (optionsFromZcashConf.datadir) {
-    const hasDatadirConf = fs.existsSync(path.join(optionsFromZcashConf.datadir, 'zcash.conf'));
+  if (optionsFromZeroConf.datadir) {
+    const hasDatadirConf = fs.existsSync(path.join(optionsFromZeroConf.datadir, 'zero.conf'));
 
     if (hasDatadirConf) {
-      optionsFromZcashConf = await parseZcashConf(
-        path.join(String(optionsFromZcashConf.datadir), 'zcash.conf'),
+      optionsFromZeroConf = await parseZcashConf(
+        path.join(String(optionsFromZeroConf.datadir), 'zero.conf'),
       );
     } else {
       useDefaultZcashConf = true;
     }
   }
 
-  if (optionsFromZcashConf.rpcconnect) store.set('rpcconnect', optionsFromZcashConf.rpcconnect);
-  if (optionsFromZcashConf.rpcport) store.set('rpcport', optionsFromZcashConf.rpcport);
-  if (optionsFromZcashConf.rpcuser) store.set('rpcuser', optionsFromZcashConf.rpcuser);
-  if (optionsFromZcashConf.rpcpassword) store.set('rpcpassword', optionsFromZcashConf.rpcpassword);
+  if (optionsFromZeroConf.rpcconnect) store.set('rpcconnect', optionsFromZeroConf.rpcconnect);
+  if (optionsFromZeroConf.rpcport) store.set('rpcport', optionsFromZeroConf.rpcport);
+  if (optionsFromZeroConf.rpcuser) store.set('rpcuser', optionsFromZeroConf.rpcuser);
+  if (optionsFromZeroConf.rpcpassword) store.set('rpcpassword', optionsFromZeroConf.rpcpassword);
 
-  log('Searching for zcashd.pid');
-  const daemonProcessId = getDaemonProcessId(optionsFromZcashConf.datadir);
+  log('Searching for zerod.pid');
+  const daemonProcessId = getDaemonProcessId(optionsFromZeroConf.datadir);
 
   if (daemonProcessId) {
     store.set(EMBEDDED_DAEMON, false);
@@ -165,12 +165,12 @@ const runDaemon: () => Promise<?ChildProcess> = () => new Promise(async (resolve
         `A daemon was found running in PID: ${daemonProcessId}. Starting Zepio in external daemon mode.`,
     );
 
-    // Command line args override zcash.conf
+    // Command line args override zero.conf
     const [{ cmd, pid }] = await findProcess('pid', daemonProcessId);
 
     store.set(DAEMON_PROCESS_PID, pid);
 
-    // We need grab the rpcuser and rpcpassword from either process args or zcash.conf
+    // We need grab the rpcuser and rpcpassword from either process args or zero.conf
     const {
       rpcuser, rpcpassword, rpcconnect, rpcport, testnet: isTestnetFromCmd,
     } = parseCmdArgs(
@@ -178,8 +178,8 @@ const runDaemon: () => Promise<?ChildProcess> = () => new Promise(async (resolve
     );
 
     store.set(
-      ZCASH_NETWORK,
-      isTestnetFromCmd === '1' || optionsFromZcashConf.testnet === '1' ? TESTNET : MAINNET,
+      ZERO_NETWORK,
+      isTestnetFromCmd === '1' || optionsFromZeroConf.testnet === '1' ? TESTNET : MAINNET,
     );
 
     if (rpcuser) store.set('rpcuser', rpcuser);
@@ -191,17 +191,17 @@ const runDaemon: () => Promise<?ChildProcess> = () => new Promise(async (resolve
   }
 
   log(
-    "Zepio couldn't find a `zcashd.pid`, that means there is no instance of zcash running on the machine, trying start built-in daemon",
+    "Zepio couldn't find a `zerod.pid`, that means there is no instance of zero running on the machine, trying start built-in daemon",
   );
 
   store.set(EMBEDDED_DAEMON, true);
 
   if (!isRelaunch) {
-    store.set(ZCASH_NETWORK, optionsFromZcashConf.testnet === '1' ? TESTNET : MAINNET);
+    store.set(ZERO_NETWORK, optionsFromZeroConf.testnet === '1' ? TESTNET : MAINNET);
   }
 
-  if (!optionsFromZcashConf.rpcuser) store.set('rpcuser', uuid());
-  if (!optionsFromZcashConf.rpcpassword) store.set('rpcpassword', uuid());
+  if (!optionsFromZeroConf.rpcuser) store.set('rpcuser', uuid());
+  if (!optionsFromZeroConf.rpcpassword) store.set('rpcpassword', uuid());
 
   const rpcCredentials = {
     username: store.get('rpcuser'),
@@ -215,7 +215,7 @@ const runDaemon: () => Promise<?ChildProcess> = () => new Promise(async (resolve
     getDaemonOptions({
       ...rpcCredentials,
       useDefaultZcashConf,
-      optionsFromZcashConf: generateArgsFromConf(optionsFromZcashConf),
+      optionsFromZeroConf: generateArgsFromConf(optionsFromZeroConf),
     }),
     {
       stdio: ['ignore', 'pipe', 'pipe'],

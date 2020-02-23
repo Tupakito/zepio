@@ -23,7 +23,7 @@ dotenv.config();
 
 let mainWindow: BrowserWindowType;
 let updateAvailable: boolean = false;
-let zcashDaemon;
+let zeroDaemon;
 
 const showStatus = (text) => {
   if (text === 'Update downloaded') updateAvailable = true;
@@ -128,8 +128,8 @@ app.on('ready', async () => {
   runDaemon()
     .then((proc) => {
       if (proc) {
-        zcashLog(`Zcash Daemon running. PID: ${proc.pid}`);
-        zcashDaemon = proc;
+        zcashLog(`Zero Daemon running. PID: ${proc.pid}`);
+        zeroDaemon = proc;
       }
     })
     .catch(zcashLog);
@@ -141,8 +141,8 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit();
 });
 app.on('before-quit', () => {
-  if (zcashDaemon) {
-    zcashLog('Graceful shutdown Zcash Daemon, this may take a few seconds.');
-    zcashDaemon.kill('SIGINT');
+  if (zeroDaemon) {
+    zcashLog('Graceful shutdown Zero Daemon, this may take a few seconds.');
+    zeroDaemon.kill('SIGINT');
   }
 });

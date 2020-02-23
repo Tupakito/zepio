@@ -2,7 +2,7 @@
 
 import fs from 'fs';
 
-import { locateZcashConf } from './locate-zcash-conf';
+import { locateZeroConf } from './locate-zcash-conf';
 import { filterObjectNullKeys } from '../../app/utils/filter-object-null-keys';
 
 type ZcashConfFile = {
@@ -35,7 +35,7 @@ type ZcashConfFile = {
 
 // eslint-disable-next-line
 export const parseZcashConf = (customDir: ?string): Promise<ZcashConfFile> => new Promise((resolve, reject) => {
-  fs.readFile(customDir || locateZcashConf(), (err, file) => {
+  fs.readFile(customDir || locateZeroConf(), (err, file) => {
     if (err) return reject(err);
 
     const fileString = file.toString();

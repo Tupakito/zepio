@@ -13,7 +13,8 @@ const getRPCConfig = () => {
 
   return {
     host: rpcconnect || '127.0.0.1',
-    port: rpcport || (isTestnet() ? 18232 : 8232),
+    // port: rpcport || (isTestnet() ? 18232 : 8232),
+    port: rpcport || (isTestnet() ? 23802 : 23811),
     user: (store.get('rpcuser'): string),
     password: (store.get('rpcpassword'): string),
   };
@@ -26,7 +27,7 @@ const getMessage = (statusCode: number, isECONNREFUSED: boolean) => {
 
   switch (statusCode) {
     case 401:
-      return 'Not authorized to access Zcash RPC, please check your rpcuser and rpcpassword';
+      return 'Not authorized to access Zero RPC, please check your rpcuser and rpcpassword';
     default:
       return 'Something went wrong';
   }

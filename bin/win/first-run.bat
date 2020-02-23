@@ -1,14 +1,14 @@
 @echo off
 
-IF NOT EXIST %AppData%\Zcash (
-    mkdir %AppData%\Zcash
+IF NOT EXIST %AppData%\Zero (
+    mkdir %AppData%\Zero
 )
 
-IF NOT EXIST %AppData%\ZcashParams (
-    mkdir %AppData%\ZcashParams
+IF NOT EXIST %AppData%\ZeroParams (
+    mkdir %AppData%\ZeroParams
 )
 
-IF NOT EXIST %AppData%\Zcash\zcash.conf (
+IF NOT EXIST %AppData%\Zero\zero.conf (
    (
     echo addnode=mainnet.z.cash 
     echo rpcuser=username 
@@ -16,5 +16,5 @@ IF NOT EXIST %AppData%\Zcash\zcash.conf (
     echo daemon=1 
     echo showmetrics=0 
     echo gen=0 
-) > %AppData%\Zcash\zcash.conf
+) > %AppData%\Zero\zero.conf
 ) 

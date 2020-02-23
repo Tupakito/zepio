@@ -192,7 +192,13 @@ const mapDispatchToProps = (dispatch: Dispatch): MapDispatchToProps => ({
     return dispatch(
       loadAddressesSuccess({
         addresses: [
-          latestZAddress
+          allAddresses
+            ? {
+              address: allAddresses,
+              balance: await rpc.z_getbalance(allAddresses),
+            }
+            : null,
+          /*latestZAddress
             ? {
               address: latestZAddress,
               balance: await rpc.z_getbalance(latestZAddress),
@@ -200,7 +206,7 @@ const mapDispatchToProps = (dispatch: Dispatch): MapDispatchToProps => ({
             : null,
           latestTAddress
             ? { address: latestTAddress, balance: await rpc.z_getbalance(latestTAddress) }
-            : null,
+            : null,*/
           ...allAddresses,
         ].filter(Boolean),
       }),
