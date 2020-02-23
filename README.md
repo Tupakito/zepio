@@ -1,4 +1,4 @@
-# Zepio | ZEC Wallet
+# Zepio | ZER Wallet
 
 Zepio is a Sapling-enabled shielded-address-first Zcash wallet, featuring cross-platform applications (macOS, Windows and Linux), built-in full node with support for `mainnet` and `testnet`, as well as `dark` and `light` themes.
 
@@ -9,7 +9,7 @@ Zepio is a Sapling-enabled shielded-address-first Zcash wallet, featuring cross-
 
 ### [Latest Release](https://github.com/ZcashFoundation/zepio/releases)
 
-![Zepio Wallet](https://raw.githubusercontent.com/ZcashFoundation/zepio-docs/develop/docz/assets/dashboard.png)
+![Zepio Wallet](https://raw.githubusercontent.com/Tupakito/zepio/master/app/assets/images/zepio-zer-screen.png)
 
 ## Stack Information
 
